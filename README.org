@@ -1,0 +1,44 @@
+* open-interpreter.el
+
+Emacs interface for [[https://github.com/OpenInterpreter/open-interpreter][Open Interpreter]] - a natural language interface for your computer.
+
+** Installation
+
+First, make sure you have installed the [[https://github.com/OpenInterpreter/open-interpreter][Open Interpreter]] CLI application:
+
+#+begin_src bash
+pip install open-interpreter
+#+end_src
+
+Then, install the Emacs package using =use-package= with =straight.el=:
+
+#+begin_src emacs-lisp
+(use-package open-interpreter
+  :straight (:host github :repo "tninja/open-interpreter.el")
+  :bind (("C-c i" . open-interpreter-action)))
+#+end_src
+
+** Usage
+
+The main interactive function is =open-interpreter-action=:
+- It automatically starts the interpreter process if not already running
+- When called with no active region, it prompts for input using helm
+- When called with an active region, it sends the selected text to interpreter
+
+Suggested key binding: =C-c i=
+
+Other useful functions:
+- =open-interpreter= - Start a new interpreter session
+- =open-interpreter-switch-to-buffer= - Switch to interpreter buffer
+- =open-interpreter-chat-helm= - Start a helm-based chat session
+
+** Customization
+
+You can customize these variables:
+- =open-interpreter-program= - Path to interpreter executable
+- =open-interpreter-arguments= - CLI arguments (default: =-y=)
+- =open-interpreter-prompt-suffix= - Optional suffix to append to inputs, before sending to interpreter
+
+** License
+
+Apache 2.0
