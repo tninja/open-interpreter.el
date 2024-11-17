@@ -10,6 +10,13 @@ First, make sure you have installed the [[https://github.com/OpenInterpreter/ope
 pip install open-interpreter
 #+end_src
 
+This package depends on =helm=. Make sure you have it installed:
+
+#+begin_src emacs-lisp
+(use-package helm
+  :ensure t)
+#+end_src
+
 Then, install the Emacs package using =use-package= with =straight.el=:
 
 #+begin_src emacs-lisp
