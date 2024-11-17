@@ -87,23 +87,6 @@ HISTORY-FILE-NAME is the base name for history file."
           (insert (prin1-to-string history-entries)))))
     input))
 
-(defun open-interpreter-action ()
-  "Send text to interpreter.
-If region is active, send selected text.
-Otherwise use helm to get input.
-Create interpreter process if it doesn't exist."
-  (interactive)
-  (unless (get-buffer open-interpreter-buffer-name)
-    (open-interpreter))
-  (let ((proc (get-buffer-process open-interpreter-buffer-name)))
-    (if (and proc (process-live-p proc))
-        (if (use-region-p)
-            (let ((text (buffer-substring-no-properties
-                        (region-beginning) (region-end))))
-              (open-interpreter-send-input input)
-              )
-          (open-interpreter-chat-helm))
-      (message "Interpreter process not running. Please restart it."))))
 
 (defun open-interpreter-send-input (input)
   "Send INPUT to the interpreter buffer and switch to it."
@@ -136,23 +119,16 @@ If region is active, send selected text.
 Otherwise use helm to get input.
 Create interpreter process if it doesn't exist."
   (interactive)
-  (if (not (get-buffer open-interpreter-buffer-name))
-      (open-interpreter)
-    (let ((proc (get-buffer-process open-interpreter-buffer-name)))
-      (if (and proc (process-live-p proc))
-          (if (use-region-p)
-              (let ((text (concat (replace-regexp-in-string
-                                   "\n" " "
-                                   (buffer-substring-no-properties
-                                    (region-beginning) (region-end)))
-                                  "\n")))
-                (with-current-buffer open-interpreter-buffer-name
-                  (goto-char (point-max))
-                  (insert text)
-                  (comint-send-input))
-                (open-interpreter-switch-to-buffer))
-            (open-interpreter-chat-helm))
-        (message "Interpreter process not running. Please restart it.")))))
+  (unless (get-buffer open-interpreter-buffer-name)
+    (open-interpreter))
+  (let ((proc (get-buffer-process open-interpreter-buffer-name)))
+    (if (and proc (process-live-p proc))
+        (if (use-region-p)
+            (let ((text (buffer-substring-no-properties
+                        (region-beginning) (region-end))))
+              (open-interpreter-send-input text))
+          (open-interpreter-chat-helm))
+      (message "Interpreter process not running. Please restart it."))))
 
 ;; (global-set-key (kbd "C-c i") 'open-interpreter-action)
 
