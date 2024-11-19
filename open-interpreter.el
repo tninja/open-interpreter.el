@@ -120,12 +120,14 @@ Create interpreter process if it doesn't exist."
   (interactive)
   (if (not (get-buffer open-interpreter-buffer-name))
       (open-interpreter)
+    (let ((proc (get-buffer-process open-interpreter-buffer-name)))
       (if (and proc (process-live-p proc))
           (if (use-region-p)
               (let ((text (buffer-substring-no-properties
-                           (region-beginning) (region-end))))
+                          (region-beginning) (region-end))))
                 (open-interpreter-send-input text))
-            (open-interpreter-chat-helm)))))
+            (open-interpreter-chat-helm))
+        (message "Interpreter process not running. Please restart it.")))))
 
 ;; (global-set-key (kbd "C-c i") 'open-interpreter-action)
 
